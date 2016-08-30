@@ -1,0 +1,305 @@
+<html>
+<head>
+<meta HTTP-EQUIV="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="style.CSS">
+<title>萌宠出售信息</title>
+<style>
+.navPoint
+{
+    font-family: Webdings;
+    font-size:9pt;
+    color:white;
+    cursor:hand;
+}
+p
+{
+    font-size:9pt;
+}
+.smallFont {  font-family: "宋体"; font-size: 10.5pt; text-decoration: none;}
+</style>
+<script type="text/javascript">
+        function initEvent() {
+            var links = document.getElementsByTagName("a");        //获取标签
+for (var i =0; i < links.length; i++) {            //遍历
+var link = links[i];
+                link.onclick = onclick;                //如果连接点击则触发事件！注javascript事件没有括号
+            }
+        }
+        function onclick() { 
+        var links = document.getElementsByTagName("a");
+            for (var i =0; i < links.length; i++) {
+                var link = links[i];
+                if (link ==this) {
+                    link.style.background ="red";
+                }
+                else {
+                    link.style.background ="white";
+                }
+            }
+            window.event.returnValue =false;         //禁止网页打开超链接
+        }
+    </script>
+</head>
+
+<body scroll="no" background="jiatu1.jpg" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<script language="javascript"  onload="initEvent()">
+
+function showitem(id,name)
+{
+    return ("<span><a class=w9b target=BoardMain href='main.asp?boardid="+id+"'>"+name+"</a></span><br>")
+}
+
+function switchoutlookBar(number)
+{
+    var i = outlookbar.opentitle;
+    outlookbar.opentitle=number;
+    var id1,id2,id1b,id2b
+    if (number!=i && outlooksmoothstat==0)
+    {
+        if (number!=-1)
+        {
+            if (i==-1)
+            {
+                id2="blankdiv";
+                id2b="blankdiv";
+            }
+            else
+            {
+                id2="outlookdiv"+i;
+                id2b="outlookdivin"+i;
+                document.all("outlooktitle"+i).style.border="1px none navy";
+                document.all("outlooktitle"+i).style.background="#A5D4EB";
+                document.all("outlooktitle"+i).style.color="black";
+                document.all("outlooktitle"+i).style.textalign="center";
+            }
+            id1="outlookdiv"+number
+            id1b="outlookdivin"+number
+            document.all("outlooktitle"+number).style.border="1px none white";
+            document.all("outlooktitle"+number).style.background="#003366";
+            document.all("outlooktitle"+number).style.color="white";
+            //alert(document.all("outlooktitle"+number).style.color)
+            document.all("outlooktitle"+number).style.textalign="center";
+            smoothout(id1,id2,id1b,id2b,0);
+        }
+        else
+        {
+            document.all("blankdiv").style.display="";
+            document.all("blankdiv").sryle.height="100%";
+            document.all("outlookdiv"+i).style.display="none";
+            document.all("outlookdiv"+i).style.height="0%";
+            document.all("outlooktitle"+i).style.border="1px none navy";
+            document.all("outlooktitle"+i).style.background="#A5D4EB";
+            document.all("outlooktitle"+i).style.color="black";
+            document.all("outlooktitle"+i).style.textalign="center";
+        }
+    }
+}
+
+function smoothout(id1,id2,id1b,id2b,stat)
+{
+    if(stat==0)
+    {
+        tempinnertext1=document.all(id1b).innerHTML;
+        tempinnertext2=document.all(id2b).innerHTML;
+        document.all(id1b).innerHTML="";
+        document.all(id2b).innerHTML="";
+        outlooksmoothstat=1;
+        document.all(id1b).style.overflow="hidden";
+        document.all(id2b).style.overflow="hidden";
+        document.all(id1).style.height="0%";
+        document.all(id1).style.display="";
+        setTimeout("smoothout('"+id1+"','"+id2+"','"+id1b+"','"+id2b+"',"+outlookbar.inc+")",outlookbar.timedalay);
+    }
+    else
+    {
+        stat+=outlookbar.inc;
+        if (stat>100)
+            stat=100;
+        document.all(id1).style.height=stat+"%";
+        document.all(id2).style.height=(100-stat)+"%";
+        if (stat<100)
+            setTimeout("smoothout('"+id1+"','"+id2+"','"+id1b+"','"+id2b+"',"+stat+")",outlookbar.timedalay);
+        else
+        {
+            document.all(id1b).innerHTML=tempinnertext1;
+            document.all(id2b).innerHTML=tempinnertext2;
+            outlooksmoothstat=0;
+            document.all(id1b).style.overflow="auto";
+            document.all(id2).style.display="none";
+        }
+    }
+}
+
+function getOutLine()
+{
+    outline="<table "+outlookbar.otherclass+">";
+    for (i=0;i<(outlookbar.titlelist.length);i++)
+    {
+        outline+="<tr><td name=outlooktitle"+i+" id=outlooktitle"+i+" ";
+        if (i!=outlookbar.opentitle)
+            outline+=" nowrap align=center style='cursor:hand;background-color:#A5D4EB;color:black;height:5;border:1 none navy' ";
+        else
+            outline+=" nowrap align=center style='cursor:hand;background-color:#005D99;color:white;height:5;border:1 none white' ";
+        outline+=outlookbar.titlelist[i].otherclass
+        outline+=" onclick='switchoutlookBar("+i+")'><span class=smallFont>";
+        outline+=outlookbar.titlelist[i].title+"</span></td></tr>";
+        outline+="<tr><td name=outlookdiv"+i+" valign=top align=center  id=outlookdiv"+i+" style='width:100%"
+        if (i!=outlookbar.opentitle)
+            outline+=";display:none;height:0%;";
+        else
+            outline+=";display:;height:100%;";
+        outline+="'><div name=outlookdivin"+i+" id=outlookdivin"+i+" style='overflow:auto;width:100%;height:100%'>";
+        for (j=0;j<outlookbar.itemlist[i].length;j++)
+            outline+=showitem(outlookbar.itemlist[i][j].key,outlookbar.itemlist[i][j].title);
+        outline+="</div></td></tr>"
+        //outline+="<tr><td background='Images/line_grey.gif'><img src='Images/blank.gif' width=1 height=1></td></tr>"
+    }
+    outline+="<tr><td name=blankdiv valign=top align=center  id=blankdiv style='height:100%;width:100%:"
+    if (outlookbar.opentitle!=-1)
+        outline+=";display:none;";
+    else
+        outline+=";display:;";
+    outline+="'><div style='overflow:auto;width:100%;height:100%'>";
+    outline+="</div></td></tr>";
+    outline+="</table>";
+    return outline;
+}
+
+function show()
+{
+    var outline;
+    outline="<div id=outLookBarDiv name=outLookBarDiv style='width=100%;height:100%'>"
+    outline+=outlookbar.getOutLine();
+    outline+="</div>"
+    document.write(outline);
+    //document.all("outLookBarDiv").innerHTML=
+}
+
+function theitem(intitle,instate,inkey)
+{
+    this.state=instate;
+    this.otherclass=" nowrap ";
+    this.key=inkey;
+    this.title=intitle;
+}
+
+function addtitle(intitle)
+{
+    outlookbar.itemlist[outlookbar.titlelist.length]=new Array();
+    outlookbar.titlelist[outlookbar.titlelist.length]=new theitem(intitle,1,0);
+    return(outlookbar.titlelist.length-1);
+}
+
+function additem(intitle,parentid,inkey)
+{
+    if (parentid>=0 && parentid<=outlookbar.titlelist.length)
+    {
+        outlookbar.itemlist[parentid][outlookbar.itemlist[parentid].length]=new theitem(intitle,2,inkey);
+        outlookbar.itemlist[parentid][outlookbar.itemlist[parentid].length-1].otherclass=" nowrap align=left style='backgroundColor:blue;height:5' ";
+        return(outlookbar.itemlist[parentid].length-1);
+    }
+    else
+        additem=-1;
+}
+
+function outlook()
+{
+    this.titlelist=new Array();
+    this.itemlist=new Array();
+    this.divstyle="style='height:100%;width:100%;overflow:auto' align=center";
+    this.otherclass="border=0 cellspacing='0' cellpadding='0' style='height:100%;width:100%'valign=middle align=center ";
+    this.addtitle=addtitle;
+    this.additem=additem;
+    this.starttitle=-1;
+    this.show=show;
+    this.getOutLine=getOutLine;
+    this.opentitle=this.starttitle;
+    this.reflesh=outreflesh;
+    this.timedelay=50;
+    this.inc=10;
+}
+
+function outreflesh()
+{
+    document.all("outLookBarDiv").innerHTML=outlookbar.getOutLine();
+}
+
+
+var outlookbar=new outlook();
+var tempinnertext1,tempinnertext2,outlooksmoothstat
+outlooksmoothstat = 0;
+
+//定义菜单
+var t;
+t=outlookbar.addtitle('波斯猫')
+outlookbar.additem('1岁半的波斯猫',t,01)
+
+t=outlookbar.addtitle('萌狗')
+outlookbar.additem('哈士奇',t,11)
+outlookbar.additem('',t,12)
+outlookbar.additem('牧羊犬',t,13)
+outlookbar.additem('松狮犬',t,14)
+outlookbar.additem('大白熊犬',t,15)
+outlookbar.additem('',t,16)
+outlookbar.additem('萨摩耶犬',t,17)
+outlookbar.additem('俊介',t,18)
+outlookbar.additem('比熊犬',t,19)
+outlookbar.additem('藏獒',t,11)
+outlookbar.additem('雪橇犬',t,110)
+
+t=outlookbar.addtitle('兔子')
+outlookbar.additem('迷你垂耳兔',t,21)
+outlookbar.additem('巨型花明兔',t,22)
+outlookbar.additem('侏儒海棠兔',t,23)
+
+t=outlookbar.addtitle('迷你类型的兔子')
+outlookbar.additem('公主兔',t,31)
+outlookbar.additem('迷你兔',t,32)
+
+t=outlookbar.addtitle('猫咪')
+outlookbar.additem('布偶猫',t,41)
+outlookbar.additem('茶杯猫',t,42)
+outlookbar.additem('挪威森林猫',t,43)
+
+t=outlookbar.addtitle('鸟')
+outlookbar.additem('八哥',t,51)
+outlookbar.additem('百灵鸟',t,52)
+
+t=outlookbar.addtitle('鱼儿')
+outlookbar.additem('金鱼',t,61)
+outlookbar.additem('神仙鱼',t,62)
+outlookbar.additem('斗鱼',t,63)
+outlookbar.additem('鲷鱼',t,64)
+outlookbar.additem('灯鱼',t,65)
+
+//定义显示样式
+outlookbar.otherclass="border=0 cellspacing='0' cellpadding='0' style='height:100%;width:100%;border-bottom:2pt solid #336699;'valign=middle align=center ";
+</script>
+
+<form method="post" action="server.html">
+			<input type="text" name="input" /> <input type="submit"	value="Submit" />
+		</form>
+
+<table cellspacing="0" cellpadding="0" width="100%" height="100%" border=0>
+<tr>
+    <td width="100%">
+          <table border="0" cellspacing="0" cellpadding="0" style="display:;width:140;height:100%" align="center">
+            <tr>
+              <td ALIGN="right" colspan="2" height="8"></td>
+            </tr>
+            <tr bgcolor="#3399CC">
+              <td colspan="2" style="height:100%" id="outLookBarShow" name="outLookBarShow" valign="top" align="center">
+                <script>
+                    //调用show()方法，显示菜单
+                    outlookbar.show();
+                </script>
+              </td>
+            </tr>
+          </table>
+    </td>
+</tr>
+</table>
+
+<a href="http://www.baidu.com">百度</a><br />
+</body>
+</html>
