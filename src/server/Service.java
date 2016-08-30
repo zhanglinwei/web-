@@ -7,11 +7,11 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 //每有一个连接建立时，服务器分出一个通信的线程
-public class HttpSer implements Runnable {
+public class Service implements Runnable {
 	// 与客户端通信的套接字
 	Socket client;
 
-	public HttpSer(Socket s) {
+	public Service(Socket s) {
 		client = s;
 	}
 

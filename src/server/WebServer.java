@@ -1,33 +1,47 @@
 package server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class WebServer {
+public class WebServer implements Runnable {
+	
+	private final ServerSocket serverSocket;
+	private final ExecutorService pool;
 
-	public static void main(String[] args) {
+	/**
+	 * 传入端口号、缓冲池大小，构造WebServer
+	 * 
+	 * @param port
+	 * @param poolSize
+	 * @throws IOException
+	 */
+	public WebServer(int port, int poolSize) throws IOException {
+		serverSocket = new ServerSocket(port, poolSize);
+		pool = Executors.newFixedThreadPool(poolSize);
+	}
 
-		ExecutorService fixedThreadPool = Executors.newFixedThreadPool(50);
-
-		int Port = 12345;// 端口号，由于这里是测试，所以不使用常用端口
-		// 创建两个套接字
-		ServerSocket server = null;
-		Socket client = null;
+	/**
+	 * 开启服务器 处理缓冲池中的连接请求
+	 */
+	public void run() {
 		try {
-			server = new ServerSocket(Port);
-			// 服务器开始监听
-			System.out.println("The WebServer is listening on port " + server.getLocalPort());
-			while (true) {
-				// 接收连接
-				client = server.accept();
-				// 多线程运行
-				fixedThreadPool.execute(new HttpSer(client));
-				// new CommunicateThread(client).start();
+			for (;;) {
+				pool.execute(new Service(serverSocket.accept()));
 			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		} catch (IOException ex) {
+			pool.shutdown();
+		}
+	}
+	
+	public static void main(String[] args) {
+		try {
+			new Thread(new WebServer(12345, 50)).start();;
+			System.out.println("服务器已开启！！");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
